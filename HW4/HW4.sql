@@ -4,21 +4,21 @@ use  project
 
 CREATE TABLE Partners (
    id_partner int IDENTITY (1, 1) PRIMARY KEY,
-   name_partner varchar(50),
+   name_partner nvarchar(50),
    email varchar (100) NOT NULL ,
-   password_partner varchar (100) NOT NULL,
-   City  varchar (50),
+   password_partner nvarchar (100) NOT NULL,
+   City  nvarchar (50),
    phone_partner  varchar (25),
 );
 
 CREATE TABLE Drivers( 
    id_driver int  IDENTITY (1, 1) PRIMARY KEY ,
-   Last_name varchar(50) NOT NULL,
-   First_name varchar(50) NOT NULL,
+   Last_name nvarchar(50) NOT NULL,
+   First_name nvarchar(50) NOT NULL,
    DOB date ,
    phone varchar (25) NOT NULL ,
-   passport varchar (50) NOT NULL,
-   drivers_license varchar (25),
+   passport nvarchar (50) NOT NULL,
+   drivers_license nvarchar (25),
    dateIssue_drivingLicense date,
    id_partner int,
 FOREIGN KEY (id_partner) REFERENCES Partners (id_partner)
@@ -36,8 +36,8 @@ CREATE TABLE  Driver_device (
   id_device int  IDENTITY (1, 1) PRIMARY KEY,
   id_driver int,
   phone_driver varchar(25) NOT NULL,
-  Last_name varchar(50) NOT NULL,
-  First_name varchar(50) NOT NULL,
+  Last_name nvarchar(50) NOT NULL,
+  First_name nvarchar(50) NOT NULL,
   Os_device varchar (25),
   deviceName varchar (25),
   imei varchar(50),
@@ -67,5 +67,4 @@ CREATE INDEX index_card on driver_card ( number_card);
 CREATE INDEX indx_email on Partners (email);
 
                             
-
 
