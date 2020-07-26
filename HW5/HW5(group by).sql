@@ -6,14 +6,14 @@
 --* Общая сумма продаж
 
 SELECT DATEPART(yy,(i.InvoiceDate)) as 'year',
-       DATEPART(mm,(i.InvoiceDate)) as 'month',
+    DATENAME(month, i.InvoiceDate) as 'month',
 	   AVG(l.UnitPrice) as 'average price' ,
 	   SUM(l.UnitPrice) as 'Total sales'
 FROM Sales.Invoices  as i 
 join Sales.InvoiceLines as l 
 on i.InvoiceID = l.InvoiceID
-GROUP BY  DATEPART(yy,i.InvoiceDate), DATEPART(mm,i.InvoiceDate)
-ORDER BY DATEPART(yy,i.InvoiceDate), DATEPART(mm,i.InvoiceDate)
+GROUP BY  DATEPART(yy,i.InvoiceDate),DATENAME(month, i.InvoiceDate)
+ORDER BY DATEPART(yy,i.InvoiceDate), DATENAME(month, i.InvoiceDate)
 
 
 --2. Отобразить все месяцы, где общая сумма продаж превысила 10 000
@@ -22,14 +22,14 @@ ORDER BY DATEPART(yy,i.InvoiceDate), DATEPART(mm,i.InvoiceDate)
 --* Месяц продажи
 --* Общая сумма продаж
 SELECT DATEPART(yy,(i.InvoiceDate)) as 'year',
-       DATEPART(mm,(i.InvoiceDate)) as 'month',
+       DATENAME(month, i.InvoiceDate) as 'month',
 	   SUM(l.UnitPrice) as 'Total sales'
 FROM Sales.Invoices  as i 
 join Sales.InvoiceLines as l 
 on i.InvoiceID = l.InvoiceID
-GROUP BY DATEPART(yy,i.InvoiceDate), DATEPART(mm,i.InvoiceDate)
+GROUP BY DATEPART(yy,i.InvoiceDate), DATENAME(month, i.InvoiceDate)
 HAVING SUM(l.UnitPrice) > 10000
-ORDER BY DATEPART(yy,i.InvoiceDate), DATEPART(mm,i.InvoiceDate)
+ORDER BY DATEPART(yy,i.InvoiceDate), DATENAME(month, i.InvoiceDate)
 
 --3. Вывести сумму продаж, дату первой продажи и количество проданного по месяцам, по товарам, продажи которых менее 50 ед в месяц.
 --Группировка должна быть по году, месяцу, товару.
@@ -41,7 +41,7 @@ ORDER BY DATEPART(yy,i.InvoiceDate), DATEPART(mm,i.InvoiceDate)
 --* Дата первой продажи
 --* Количество проданного
 SELECT DATEPART(yy,(i.InvoiceDate)) as 'year',
-       DATEPART(mm,(i.InvoiceDate)) as 'month',
+       DATENAME(month, i.InvoiceDate) as 'month',
 	   w.StockItemName,
 	   SUM(l.UnitPrice) as 'Sales amount',
 	   SUM(l.Quantity) as 'Quantity sold',
@@ -51,8 +51,9 @@ join Sales.InvoiceLines as l
 on i.InvoiceID = l.InvoiceID
 join Warehouse.StockItems as w
 on l.StockItemID = w.StockItemID		
-GROUP BY DATEPART(yy,i.InvoiceDate), DATEPART(mm,i.InvoiceDate), w.StockItemName
+GROUP BY DATEPART(yy,i.InvoiceDate),  DATENAME(month, i.InvoiceDate), w.StockItemName
 HAVING SUM(l.Quantity) < 50
+ORDER BY DATEPART(yy,i.InvoiceDate),  DATENAME(month, i.InvoiceDate)
 
 --4. Написать рекурсивный CTE sql запрос и заполнить им временную таблицу и табличную переменную
 
@@ -77,8 +78,8 @@ INSERT INTO dbo.MyEmployees VALUES
 ,(286, N'Lynn', N'Tsoflias', N'Sales Representative',3,285)
 ,(16, N'David',N'Bradley', N'Marketing Manager', 4, 273)
 ,(23, N'Mary', N'Gibson', N'Marketing Specialist', 4, 16);
-
-
+ 
+ select * from dbo.MyEmployees
 
 CREATE TABLE #TABLEct
 (EmployeeID int,
@@ -99,7 +100,7 @@ on c.EmployeeID = e.ManagerID)
 
 INSERT INTO #TABLEct
 (EmployeeID, Name, Title,EmployeeLevel )
-SELECT EmployeeID, ( FirstName + LastName), Title,EmployeeLevel FROM RecCTE
+SELECT EmployeeID, REPLICATE( '|',EmployeeLevel-1) +( FirstName + LastName), Title,EmployeeLevel FROM RecCTE
 
 
 
@@ -121,5 +122,6 @@ on c.EmployeeID = e.ManagerID)
 
 INSERT INTO @TABLEct
 (EmployeeID, Name, Title,EmployeeLevel )
-SELECT EmployeeID, ( FirstName + LastName), Title,EmployeeLevel FROM RecCTE
+SELECT EmployeeID, REPLICATE( '|',EmployeeLevel-1) +( FirstName + LastName), Title,EmployeeLevel FROM RecCTE
+select * from @TABLEct
 
