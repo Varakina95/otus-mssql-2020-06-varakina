@@ -268,7 +268,3 @@ BULK INSERT [WideWorldImporters].[Sales].[Customers_Bulk]
 					  );
 
 
-
-select Count(*) from [Sales].[Customers_Bulk];
-
-TRUNCATE TABLE [Sales].[InvoiceLines_BulkDemo];
