@@ -10,6 +10,8 @@ CREATE TABLE Partners (
    City  nvarchar (50),
    phone_partner  varchar (25),
 );
+ ALTER TABLE  Drivers DROP COLUMN id_partner
+ ALTER TABLE  Drivers DROP CONSTRAINT FK__Drivers__id_part__5EBF139D
 
 CREATE TABLE Drivers( 
    id_driver int  IDENTITY (1, 1) PRIMARY KEY ,
@@ -24,14 +26,24 @@ CREATE TABLE Drivers(
 FOREIGN KEY (id_partner) REFERENCES Partners (id_partner)
 ) ;
 
+CREATE TABLE Partner_drivers (
+id_PartnerDrivers int  IDENTITY (1, 1) PRIMARY KEY ,
+id_driver int,
+id_partner int,
+connection_date date,
+FOREIGN KEY (id_partner) REFERENCES Partners (id_partner),
+FOREIGN KEY (id_driver) REFERENCES Drivers (id_driver)
+);
+
 CREATE TABLE driver_card (
    id_card int IDENTITY (1, 1) PRIMARY KEY,
    phone_driver varchar (25) NOT NULL,
    number_card varchar (50),
    id_driver int,
 FOREIGN KEY (id_driver) REFERENCES Drivers (id_driver)
-
 );
+
+
 CREATE TABLE  Driver_device (
   id_device int  IDENTITY (1, 1) PRIMARY KEY,
   id_driver int,
@@ -74,6 +86,20 @@ Tips_payment money,
 Status_payment  varchar(15),
 FOREIGN KEY (id_driver) REFERENCES Drivers (id_driver)
 );
+
+
+CREATE TABLE Driver_transfer (
+id_transfer int  IDENTITY (1, 1) PRIMARY KEY,
+Date_transfer date,
+id_driver int,
+Transfer_amount money,
+id_card int,
+number_card varchar (50),
+Status_transfer  varchar(15)
+FOREIGN KEY (id_driver) REFERENCES Drivers (id_driver),
+FOREIGN KEY (id_card) REFERENCES driver_card (id_card)
+);
+
 
 
 
