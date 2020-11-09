@@ -10,8 +10,7 @@ CREATE TABLE Partners (
    City  nvarchar (50),
    phone_partner  varchar (25),
 );
- ALTER TABLE  Drivers DROP COLUMN id_partner
- ALTER TABLE  Drivers DROP CONSTRAINT FK__Drivers__id_part__5EBF139D
+
 
 CREATE TABLE Drivers( 
    id_driver int  IDENTITY (1, 1) PRIMARY KEY ,
@@ -47,9 +46,6 @@ FOREIGN KEY (id_driver) REFERENCES Drivers (id_driver)
 CREATE TABLE  Driver_device (
   id_device int  IDENTITY (1, 1) PRIMARY KEY,
   id_driver int,
-  phone_driver varchar(25) NOT NULL,
-  Last_name nvarchar(50) NOT NULL,
-  First_name nvarchar(50) NOT NULL,
   Os_device varchar (25),
   deviceName varchar (25),
   imei varchar(50),
@@ -60,9 +56,6 @@ FOREIGN KEY (id_driver) REFERENCES Drivers (id_driver)
 
 CREATE TABLE Driver_checks (
 id_checks int  IDENTITY (1, 1) PRIMARY KEY,
-Last_name nvarchar(50) NOT NULL,
-First_name nvarchar(50) NOT NULL,
-phone_driver varchar (25) NOT NULL,
 id_driver int,
 Ñheck_name nvarchar(50)  NOT NULL,
 Check_start datetime,
@@ -73,12 +66,11 @@ FOREIGN KEY (id_driver) REFERENCES Drivers (id_driver)
 );
 
 
-CREATE TABLE Payments(
+CREATE TABLE  Payments (
 id_Payment int  IDENTITY (1, 1) PRIMARY KEY,
 id_driver int,
-phone_driver varchar (25) NOT NULL,
 payment_date datetime,
-Order_number varchar(25),
+Id_orders int,
 Amount_payment money,
 Bonus_payment  money,
 Parking_payment money,
@@ -88,19 +80,34 @@ FOREIGN KEY (id_driver) REFERENCES Drivers (id_driver)
 );
 
 
+ALTER TABLE Payments
+ADD FOREIGN KEY (Id_orders) REFERENCES Orders (Id_orders);   
+
 CREATE TABLE Driver_transfer (
 id_transfer int  IDENTITY (1, 1) PRIMARY KEY,
 Date_transfer date,
 id_driver int,
 Transfer_amount money,
 id_card int,
-number_card varchar (50),
-Status_transfer  varchar(15)
+Status_transfer  varchar(15),
+id_Payment int
 FOREIGN KEY (id_driver) REFERENCES Drivers (id_driver),
-FOREIGN KEY (id_card) REFERENCES driver_card (id_card)
+FOREIGN KEY (id_card) REFERENCES driver_card (id_card),
+FOREIGN KEY(id_Payment) REFERENCES  Payments (id_Payment)
 );
 
 
+
+CREATE TABLE Orders
+(
+Id_orders int  IDENTITY (1, 1) PRIMARY KEY,
+Date_Completion datetime,
+Order_price money,
+Aggregator varchar(20),
+Order_number varchar(25),
+Distance varchar(20),
+Time_Orders time
+);
 
 
 ALTER TABLE  Drivers
@@ -120,9 +127,4 @@ ALTER TABLE Partners
 ALTER TABLE Driver_device
  ADD  CONSTRAINT d_n DEFAULT ('No') for deviceName;
 
-CREATE INDEX indx_phone on Drivers (phone);
-CREATE INDEX index_card on driver_card ( number_card);
-CREATE INDEX indx_email on Partners (email);
-
-                            
 
