@@ -1,3 +1,4 @@
+drop procedure if exists Sales.ConfirmInvoice
 CREATE PROCEDURE Sales.ConfirmInvoice
 AS
 BEGIN

@@ -21,7 +21,7 @@ DECLARE @RequestMessage NVARCHAR(4000);
 
 BEGIN TRAN
 
-SELECT @RequestMessage = (SELECT CustomerID,  @Firstdate AS Firstdat , @Lastdate AS Lastdate
+SELECT @RequestMessage = (SELECT CustomerID,  @Firstdate AS Firstdate , @Lastdate AS Lastdate
 							  FROM Sales.Invoices AS Inv
 							  WHERE CustomerID = @CustomerID 
 							  GROUP BY  CustomerID
